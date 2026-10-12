@@ -3,8 +3,16 @@
 #include <cuda_runtime.h>
 
 #include <cstddef>
+#include <cstdint>
 
 namespace ninfer {
+
+// Immutable launch-time view of the execution target: the stream to enqueue on and the
+// physical SM count used by launch decomposition heuristics.
+struct DeviceExecutionView {
+    cudaStream_t stream = nullptr;
+    std::int32_t multiprocessor_count = 0;
+};
 
 void cuda_check(cudaError_t err, const char* expr, const char* file, int line);
 
@@ -25,6 +33,7 @@ struct DeviceContext {
     DeviceContext& operator=(DeviceContext&& other) noexcept;
 
     int sm() const noexcept;
+    DeviceExecutionView execution_view() const noexcept;
     std::size_t total_vram() const noexcept;
     void synchronize() const;
 };

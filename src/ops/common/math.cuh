@@ -35,6 +35,13 @@ __device__ __forceinline__ std::uint32_t pack_bf16x2(float lo, float hi) {
 #endif
 }
 
+// Exact BF16 expansion for consumers that need FP32 operand bits, including TF32 MMA.
+__device__ __forceinline__ void unpack_bf16x2_to_fp32_bits(unsigned packed, unsigned& low,
+                                                           unsigned& high) {
+    low  = packed << 16;
+    high = packed & 0xffff0000U;
+}
+
 __device__ __forceinline__ float2 bf16x2_to_float2(__nv_bfloat162 value) {
     return __bfloat1622float2(value);
 }

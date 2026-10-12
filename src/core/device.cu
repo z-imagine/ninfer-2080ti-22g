@@ -116,6 +116,10 @@ DeviceContext& DeviceContext::operator=(DeviceContext&& other) noexcept {
 
 int DeviceContext::sm() const noexcept { return props.major * 10 + props.minor; }
 
+DeviceExecutionView DeviceContext::execution_view() const noexcept {
+    return DeviceExecutionView{stream, static_cast<std::int32_t>(props.multiProcessorCount)};
+}
+
 std::size_t DeviceContext::total_vram() const noexcept { return props.totalGlobalMem; }
 
 void DeviceContext::synchronize() const { CUDA_CHECK(cudaStreamSynchronize(stream)); }
